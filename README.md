@@ -1,4 +1,5 @@
 This is a simple addon for **Godot(*v3.4.4 stable*)** that can help you to easily place ***PackedScene*** in **2D panel**.
+
 **Current version: 0.5.3**
 
 # Usage
@@ -20,5 +21,7 @@ Additionally, there are also some other features:
 # Special Thanks
 
 Get the selected items path in the filesystem dock: https://github.com/godotengine/godot-proposals/issues/3505
+
 Get the main screen panel: https://github.com/godotengine/godot-proposals/issues/2081
+
 Get the editor viewport2d: https://github.com/godotengine/godot-proposals/issues/1302
