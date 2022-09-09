@@ -117,7 +117,7 @@ static func get_brush2d(object :Object) ->Object:
 
 static func find_viewport_2d(node :Node, recursive_level :int = 0) ->Node:
 	if node.get_class() == "CanvasItemEditor":
-		return node.get_child(1).get_child(0).get_child(0).get_child(0).get_child(0)
+		return node.get_child(1).get_child(0).get_child(0).get_child(0).get_child(0).get_child(0)
 	else:
 		recursive_level += 1
 		if recursive_level > 15:
