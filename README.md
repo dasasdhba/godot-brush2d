@@ -1,6 +1,6 @@
 This is a simple addon for **Godot(*v3.5.0 stable*)** that can help you to easily place ***PackedScene*** in **2D panel**.
 
-**Current version: 0.5.9**
+**Current version: 0.6.0**
 
 # Usage
 
