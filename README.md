@@ -1,6 +1,6 @@
 This is a simple addon for **Godot(*v3.5.0 stable*)** that can help you to easily place ***PackedScene*** in **2D panel**.
 
-**Current version: 0.6.0**
+**Current version: 0.6.5**
 
 # Usage
 
@@ -16,7 +16,7 @@ Additionally, there are also some other features:
 1. Hold `Shift` (by default) so that you can paint or erase continuously. You can also switch the ***Click Only*** parameter to change this behavior.
 2. If the **Paint Mode** is not enabled, you can press `C`(by default) to copy or `X`(by default) to cut the selected items. To clear the copied items, simply select nothing and press `C` again.
 3. The ***grid*** is independent.
-4. It's almost impossible to calculate the size of a ***PackedScene*** node, so you have to set it up manually. if the ***PackedScene*** node has the exported variables ***brush_border***(Rect2) and ***brush_offset***(Vector2) ,then the addon will use them as the "size" of this node, or the addon will use the ***Default Border*** and ***Default Offset*** parameters.
+4. It's almost impossible to calculate the size of a ***PackedScene*** node, so you have to set it up manually. If the ***PackedScene*** node has a child ***BrushParam***, then the addon will use its parameters as the "size" of this node, or the addon will use the ***Default Border*** and ***Default Offset*** parameters.
 
 # Special Thanks
 
