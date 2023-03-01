@@ -309,7 +309,10 @@ func free_preview() ->void:
 func _draw() ->void:
 	if !Engine.editor_hint || !preview_border || !working:
 		return
-	draw_rect(preview_rect,border_color,false,2)
+	var r :Rect2 = preview_rect
+	r.position -= Vector2.ONE
+	r.end += 2*Vector2.ONE
+	draw_rect(r,border_color,false,2)
 	
 func _process(_delta):
 	if !Engine.editor_hint:

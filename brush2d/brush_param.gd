@@ -10,12 +10,15 @@ export var preview :bool = false
 export var preview_color :Color = Color(1,0.5,1,1)
 
 func _ready() ->void:
-    if !Engine.editor_hint:
-        queue_free()
+	if !Engine.editor_hint:
+		queue_free()
 
 func _draw() ->void:
-    if preview:
-        draw_rect(border,preview_color,false,2)
+	if preview:
+		var r :Rect2 = border
+		r.position -= Vector2.ONE
+		r.end += 2*Vector2.ONE
+		draw_rect(r,preview_color,false,2)
 
 func _process(_delta) ->void:
-    update()
+	update()
