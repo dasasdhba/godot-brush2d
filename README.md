@@ -15,11 +15,10 @@ Here is a simple instruction:
 
 Other features:
 
-1. Paint/Rectangle/Line tools.
+1. Paint/Rectangle/Line tools, you can hold `Shift` to limit the paint shape.
 2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them. 
 3. Some editor settings that manage shortcut and preview behavior.
 
 ## Known Issue
 
 1. Does not work in filesystem dock split mode, will be fixed in 4.3.1, see [this](https://github.com/godotengine/godot/pull/94703) for details. Alternately, you can still use the copy feature to use this plugin.
-2. Line tool does not work as pixel perfect. (I don't exactly know how to implement this.)

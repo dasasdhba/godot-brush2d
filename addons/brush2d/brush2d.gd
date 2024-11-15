@@ -14,6 +14,7 @@ var preview :bool = true
 var preview_alpha :float = 0.5
 var preview_border :bool = true
 var border_color :Color = Color(0.9,0.4,0.3,0.7)
+var paint_color :Color = Color(1.0,1.0,1.0,0.2)
 var erase_color :Color = Color(0.0,0.0,0.0,0.4)
 var border_width :float = 2
 
@@ -210,48 +211,31 @@ func free_preview_paint() ->void:
 	for i in preview_paint_pool:
 		if is_instance_valid(i):
 			i.queue_free()
-	for i in preview_reuse_pool:
-		if is_instance_valid(i):
-			i.queue_free()
 			
 	preview_paint_pool.clear()
-	preview_reuse_pool.clear()
 
 var preview_paint_pool :Array = []
-var preview_reuse_pool :Array = []
 
 func add_preview_paint(pos :Vector2) ->void:
-	if preview_reuse_pool.is_empty():
-		if copy_list.is_empty():
-			var new :Node = paint_res.instantiate()
-			new.name = "_PreviewPaint"
-			new.position = pos
-			new.modulate.a = preview_alpha
-			preview_paint_pool.append(new)
-			add_child(new, false, INTERNAL_MODE_BACK)
-		else:
-			var fpos :Vector2 = copy_list[0].position
-			var r := Node2D.new()
-			r.position = pos
-			for s in copy_list:
-				var i :Node = s.duplicate()
-				i.position += -fpos
-				i.name = "_PreviewCopy" + var_to_str(i)
-				i.modulate.a = preview_alpha
-				r.add_child(i)
-			preview_paint_pool.append(r)
-			add_child(r, false, INTERNAL_MODE_BACK)
-	else:
-		var new :Node = preview_reuse_pool.pop_back()
+	if copy_list.is_empty():
+		var new :Node = paint_res.instantiate()
+		new.name = "_PreviewPaint"
 		new.position = pos
+		new.modulate.a = preview_alpha
 		preview_paint_pool.append(new)
 		add_child(new, false, INTERNAL_MODE_BACK)
-
-func clear_preview_paint() ->void:
-	for i in preview_paint_pool:
-		remove_child(i)
-		preview_reuse_pool.append(i)
-	preview_paint_pool.clear()
+	else:
+		var fpos :Vector2 = copy_list[0].position
+		var r := Node2D.new()
+		r.position = pos
+		for s in copy_list:
+			var i :Node = s.duplicate()
+			i.position += -fpos
+			i.name = "_PreviewCopy" + var_to_str(i)
+			i.modulate.a = preview_alpha
+			r.add_child(i)
+		preview_paint_pool.append(r)
+		add_child(r, false, INTERNAL_MODE_BACK)
 
 class PaintUndoData:
 	extends RefCounted
@@ -378,27 +362,86 @@ func get_continuous_grid_pos(grid_pos :Vector2, size :Vector2) ->Array[Vector2]:
 	result.append(grid_pos)
 	return result
 
+static func bresenham(p0 :Vector2i, p1 :Vector2i) ->Array[Vector2i]:
+	var result :Array[Vector2i] = []
+	var x0 := p0.x
+	var y0 := p0.y
+	var x1 := p1.x
+	var y1 := p1.y
+	var steep :bool = abs(y1 - y0) > abs(x1 - x0)
+	if steep:
+		var temp :int
+
+		temp = x0
+		x0 = y0
+		y0 = temp
+
+		temp = x1
+		x1 = y1
+		y1 = temp
+
+	if x0 > x1:
+		var temp :int
+
+		temp = x0
+		x0 = x1
+		x1 = temp
+
+		temp = y0
+		y0 = y1
+		y1 = temp
+
+	var delta_x := x1 - x0
+	var delta_y :int = abs(y1 - y0)
+	var error :float = 0.0
+	var delta_error :float = float(delta_y) / delta_x
+	var yk := y0
+
+	var y_step := 1 if y0 < y1 else -1
+
+	for xk in range(x0, x1 + 1):
+		if steep:
+			result.append(Vector2i(yk, xk))
+		else:
+			result.append(Vector2i(xk, yk))
+
+		error = error + delta_error
+		if error >= 0.5:
+			yk = yk + y_step
+			error = error - 1.0
+	return result
+
 func get_line_pos(p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
-	var result :Array[Vector2] = [p1]
-	var len :float = (p2 - p1).length()
-	var step :float = min(grid.x, grid.y) / 2.0
-	var current :float = step
-	while current < len:
-		var p :float = current / len
-		var r :Vector2 = (1 - p) * p1 + p * p2
-		r.x = round(r.x/grid.x)*grid.x
-		r.y = round(r.y/grid.y)*grid.y
-		if is_paint_pos_valid_in_arr(result, r):
-			result.append(r)
-		current += step
-	if is_paint_pos_valid_in_arr(result, p2):
-		result.append(p2)
+	var size = border.size
+	size.x = ceil(size.x/grid.x)*grid.x
+	size.y = ceil(size.y/grid.y)*grid.y
+
+	var d := p2 - p1
+	var r := Vector2i(floor(d.x/size.x), floor(d.y/size.y))
+	if Input.is_key_pressed(KEY_SHIFT):
+		var s :Vector2 = r
+		var a = round(s.angle() / (PI / 4.0)) * (PI / 4.0)
+		var f := Vector2.RIGHT.rotated(a)
+		var l = s.dot(f)
+		f *= l
+		r = f
+	var points := bresenham(Vector2i.ZERO, r)
+	var result :Array[Vector2] = []
+	for p in points:
+		result.append(p1 + Vector2(size.x * p.x, size.y * p.y))
 	return result
 
 func get_rect_pos(p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
+	if Input.is_key_pressed(KEY_SHIFT):
+		var dx = p2.x - p1.x
+		var dy = p2.y - p1.y
+		var m = min(abs(dx), abs(dy))
+		p2.x = p1.x + m * sign(dx)
+		p2.y = p1.y + m * sign(dy)
+
 	var size = border.size
 	size.x = ceil(size.x/grid.x)*grid.x * sign(p2.x - p1.x)
-	size.y = ceil(size.y/grid.y)*grid.y	* sign(p2.y - p1.y)
+	size.y = ceil(size.y/grid.y)*grid.y * sign(p2.y - p1.y)
 
 	var result :Array[Vector2] = []
 	var x := p1.x
@@ -409,6 +452,8 @@ func get_rect_pos(p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
 			result.append(r)
 			y += size.y
 		x += size.x
+	if result.is_empty():
+		result.append(p1)
 	return result
 
 func is_pos_out_border(p1 :Vector2, p2 :Vector2) ->bool:
@@ -431,15 +476,11 @@ func paint_process(res :Resource, grid_pos :Vector2) ->void:
 			paint_start = grid_pos
 		if is_pos_out_border(grid_pos, mouse_last):
 			mouse_last = grid_pos
-			clear_preview_paint()
 			paint_pos_arr.clear()
 			if mode == 1:
 				paint_pos_arr = get_line_pos(paint_start, grid_pos)
 			else:
 				paint_pos_arr = get_rect_pos(paint_start, grid_pos)
-			if preview:
-				for i in paint_pos_arr:
-					add_preview_paint(i + offset)
 
 var erase_start = null
 var erase_last := Vector2(INF,INF)
@@ -583,13 +624,17 @@ func _copy_process(sel :Array) ->void:
 	if cut_restrict && !Input.is_key_pressed(cut_key):
 		cut_restrict = false
 
-class EraseDraw:
+class BlockDraw:
 	extends Node2D
 
 	func _draw() ->void:
 		var b := get_parent()
 		if !b.working:
 			return
+
+		for p in b.paint_pos_arr:
+			var pr := Rect2(p + b.offset + b.border.position, b.preview_rect.size)
+			draw_rect(pr, b.paint_color)
 
 		for p in b.erase_pos_arr:
 			var er := Rect2(p + b.offset + b.border.position, b.border.size)
@@ -602,9 +647,9 @@ func _enter_tree() -> void:
 	if !Engine.is_editor_hint():
 		return
 	
-	var er :EraseDraw = EraseDraw.new()
-	er.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
-	add_child(er, false, INTERNAL_MODE_BACK)
+	var br :BlockDraw = BlockDraw.new()
+	br.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
+	add_child(br, false, INTERNAL_MODE_BACK)
 
 func _draw() ->void:
 	if !Engine.is_editor_hint() || !preview_border || !working:

@@ -22,6 +22,7 @@ const editor_preview_alpha = setting_key + "/preview/alpha"
 const editor_preview_border = setting_key + "/preview/draw_border"
 const editor_preview_border_width = setting_key + "/preview/border_width"
 const editor_preview_border_color = setting_key + "/preview/border_color"
+const editor_preview_paint_color = setting_key + "/preview/paint_color"
 const editor_preview_erase_color = setting_key + "/preview/erase_color"
 
 func try_add_button() ->void:
@@ -68,6 +69,7 @@ func apply_settings(p_brush :Brush2D) ->void:
 	p_brush.preview_border = setting.get_setting(editor_preview_border)
 	p_brush.border_color = setting.get_setting(editor_preview_border_color)
 	p_brush.border_width = setting.get_setting(editor_preview_border_width)
+	p_brush.paint_color = setting.get_setting(editor_preview_paint_color)
 	p_brush.erase_color = setting.get_setting(editor_preview_erase_color)
 
 func _enter_tree() ->void:
@@ -79,6 +81,7 @@ func _enter_tree() ->void:
 	add_editor_setting(editor_preview_border, PROPERTY_HINT_NONE, true)
 	add_editor_setting(editor_preview_border_width, PROPERTY_HINT_NONE, 2)
 	add_editor_setting(editor_preview_border_color, PROPERTY_HINT_NONE, Color(0.9,0.4,0.3,0.7))
+	add_editor_setting(editor_preview_paint_color, PROPERTY_HINT_NONE, Color(1.0,1.0,1.0,0.2))
 	add_editor_setting(editor_preview_erase_color, PROPERTY_HINT_NONE, Color(0.0,0.0,0.0,0.4))
 
 func _exit_tree() ->void:
@@ -90,6 +93,7 @@ func _exit_tree() ->void:
 	remove_editor_setting(editor_preview_border)
 	remove_editor_setting(editor_preview_border_width)
 	remove_editor_setting(editor_preview_border_color)
+	remove_editor_setting(editor_preview_paint_color)
 	remove_editor_setting(editor_preview_erase_color)
 
 
