@@ -1,25 +1,25 @@
-This is a simple addon for **Godot(*v4.2.1 stable*)** that can help you to easily place ***PackedScene*** in **2D panel**.
+# Introduction
 
-**Current version: 0.7.0**
+This is a simple addon for **Godot-v4.3.0-stable** that can help you to easily place **PackedScene** in **2D panel**.
+
+**Current version: 0.8.0**
 
 ## Usage
 
 Here is a simple instruction:
 
-1. Add a ***Brush2D*** node in the editor scene tree and select it or its child.
-2. Click the **Enable** button(or use shortcut `A` by default, you may change this in `tool_button.res`) to switch to the **Paint Mode**.
-3. Select a ***PackedScene*** in the filesystem dock.
+1. Add a `Brush2D` node in the editor scene tree and select it or its child.
+2. Click the **Enable** button(or use shortcut `A` by default, you may change this in `tool_button.tscn`) to switch to the **Paint Mode**.
+3. Select a **PackedScene** in the filesystem dock.
 4. Now you can simply use the mouse **left button** to paint or **right button** to erase.
 
-Additionally, there are also some other features:
+Other features:
 
-1. Hold `Shift` (by default) so that you can paint or erase continuously. You can also switch the editor setting `brush_2d->control->restrict` to change this behavior.
-2. If the **Paint Mode** is not enabled, you can press `C`(by default) to copy or `X`(by default) to cut the selected items. To clear the copied items, simply select nothing and press `C` again.
-3. The ***grid*** is independent.
-3. See **Editor Setting** for more options.
-4. It's almost impossible to calculate the size of a ***PackedScene*** node, so you have to set it up manually. If the ***PackedScene*** node has a child ***BrushParam***, then the addon will use its parameters as the "size" of this node, or the addon will use the ***Default Border*** and ***Default Offset*** parameters.
+1. Paint/Rectangle/Line tools.
+2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them. 
+3. Some editor settings that manage shortcut and preview behavior.
 
 ## Known Issue
 
-1. Currently copy a node will also copy its **Internal Children**(i.e. some internal tool children), which is not expected.
-2. This is a pretty old plugin I've ever made, thus the code and performance may not very good.
+1. Does not work in filesystem dock split mode, will be fixed in 4.3.1, see [this](https://github.com/godotengine/godot/pull/94703) for details. Alternately, you can still use the copy feature to use this plugin.
+2. Line tool does not work as pixel perfect. (I don't exactly know how to implement this.)
