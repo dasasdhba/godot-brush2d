@@ -643,11 +643,17 @@ class BlockDraw:
 	func _process(delta: float) -> void:
 		queue_redraw()
 
+const BLOCK_DRAW_NAME :String = "__Brush2DInternalBlockDraw"
+
 func _enter_tree() -> void:
 	if !Engine.is_editor_hint():
 		return
+
+	if has_node(BLOCK_DRAW_NAME):
+		get_node(BLOCK_DRAW_NAME).queue_free()
 	
 	var br :BlockDraw = BlockDraw.new()
+	br.name = BLOCK_DRAW_NAME
 	br.z_index = RenderingServer.CANVAS_ITEM_Z_MAX
 	add_child(br, false, INTERNAL_MODE_BACK)
 
