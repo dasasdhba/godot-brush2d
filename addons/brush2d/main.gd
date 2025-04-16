@@ -87,6 +87,8 @@ func _enter_tree() ->void:
 func _exit_tree() ->void:
 	if is_instance_valid(button):
 		button.queue_free()
+
+func _disable_plugin() ->void:
 	remove_editor_setting(editor_copy_key)
 	remove_editor_setting(editor_cut_key)
 	remove_editor_setting(editor_preview_alpha)
@@ -95,7 +97,6 @@ func _exit_tree() ->void:
 	remove_editor_setting(editor_preview_border_color)
 	remove_editor_setting(editor_preview_paint_color)
 	remove_editor_setting(editor_preview_erase_color)
-
 
 func _handles(object :Object) ->bool:
 	brush = get_brush2d(object)

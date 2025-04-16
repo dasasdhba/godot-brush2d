@@ -2,7 +2,7 @@
 
 This is a simple addon for **Godot-v4.3.0-stable** that can help you to easily place **PackedScene** in **2D panel**.
 
-**Current version: 0.8.0**
+**Current version: 0.8.1**
 
 ## Usage
 
@@ -16,7 +16,7 @@ Here is a simple instruction:
 Other features:
 
 1. Paint/Rectangle/Line tools, you can hold `Shift` to limit the paint shape.
-2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them. 
+2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them.
 3. Some editor settings that manage shortcut and preview behavior.
 
 ## Known Issue
