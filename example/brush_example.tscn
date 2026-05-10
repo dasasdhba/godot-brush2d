@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://d3wepis3ofx8x"]
 
-[ext_resource type="Script" uid="uid://cnaholbf8012o" path="res://addons/brush2d/brush2d.gd" id="1_novax"]
+[ext_resource type="Script" uid="uid://cnaholbf8012o" path="res://addons/brush2d/brush2d.gd" id="1_a1m5l"]
 
 [node name="BrushExample" type="Node2D" unique_id=194577409]
 
 [node name="Brush2D" type="Node2D" parent="." unique_id=1500982035]
-script = ExtResource("1_novax")
+script = ExtResource("1_a1m5l")
 metadata/_custom_type_script = "uid://cnaholbf8012o"
