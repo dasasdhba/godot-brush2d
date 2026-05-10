@@ -8,10 +8,12 @@ var brush :Brush2D:
 		return _brush
 	set(value):
 		if value == null && _brush != null:
-			_brush.clear_working()
+			_brush.brush_clear()
 		_brush = value
 
 var _brush :Brush2D = null
+
+# settings
 
 const setting_key = "brush_2d";
 const editor_copy_key = setting_key + "/control/copy_key"
@@ -25,23 +27,7 @@ const editor_preview_border_color = setting_key + "/preview/border_color"
 const editor_preview_paint_color = setting_key + "/preview/paint_color"
 const editor_preview_erase_color = setting_key + "/preview/erase_color"
 
-func try_add_button() ->void:
-	if button == null:
-		button = load("res://addons/brush2d/tool_button.tscn").instantiate()
-		var button_node :Button = button.get_node("ToolButton")
-		if !button_node.is_connected("toggled",select_update):
-			button_node.connect("toggled",select_update)
-
-func button_check() ->bool:
-	return button != null && button.visible && button.get_node("ToolButton").button_pressed
-
-func select_update(_pressed :bool = false) ->void:
-	var select := EditorInterface.get_selection()
-	if brush != null && button_check():
-		select.clear()
-		select.add_node(brush)
-
-func add_editor_setting(key :String, hint :int, default) ->void:
+static func add_editor_setting(key :String, hint :int, default) ->void:
 	var setting := EditorInterface.get_editor_settings()
 	if setting.has_setting(key):
 		return
@@ -53,7 +39,7 @@ func add_editor_setting(key :String, hint :int, default) ->void:
 		"hint" : hint
 	})
 
-func remove_editor_setting(key :String) ->void:
+static func remove_editor_setting(key :String) ->void:
 	var setting := EditorInterface.get_editor_settings()
 	if setting.has_setting(key):
 		setting.erase(key)
@@ -61,7 +47,7 @@ func remove_editor_setting(key :String) ->void:
 func apply_settings(p_brush :Brush2D) ->void:
 	var setting := EditorInterface.get_editor_settings()
 	p_brush.undo = get_undo_redo()
-	p_brush.mode = button.get_mode()
+	p_brush.place_mode = button.get_mode()
 	p_brush.copy_key = setting.get_setting(editor_copy_key)
 	p_brush.cut_key = setting.get_setting(editor_cut_key)
 	p_brush.preview = setting.get_setting(editor_preview_enable)
@@ -72,8 +58,11 @@ func apply_settings(p_brush :Brush2D) ->void:
 	p_brush.paint_color = setting.get_setting(editor_preview_paint_color)
 	p_brush.erase_color = setting.get_setting(editor_preview_erase_color)
 
+var dock
+var dock_content
+
 func _enter_tree() ->void:
-	try_add_button()
+	try_create_button()
 	add_editor_setting(editor_copy_key, PROPERTY_HINT_NONE, KEY_C)
 	add_editor_setting(editor_cut_key, PROPERTY_HINT_NONE, KEY_X)
 	add_editor_setting(editor_preview_enable, PROPERTY_HINT_NONE, true)
@@ -84,9 +73,22 @@ func _enter_tree() ->void:
 	add_editor_setting(editor_preview_paint_color, PROPERTY_HINT_NONE, Color(1.0,1.0,1.0,0.2))
 	add_editor_setting(editor_preview_erase_color, PROPERTY_HINT_NONE, Color(0.0,0.0,0.0,0.4))
 
+	dock = EditorDock.new()
+	dock.title = "Brush2D"
+	dock.default_slot = EditorDock.DOCK_SLOT_BOTTOM
+	dock_content = preload("param_dock.tscn").instantiate()
+	dock.add_child(dock_content)
+	add_dock(dock)
+
 func _exit_tree() ->void:
 	if is_instance_valid(button):
+		if button.visible:
+			remove_control_from_container(CONTAINER_CANVAS_EDITOR_MENU, button)
 		button.queue_free()
+
+	remove_dock(dock)
+	dock.queue_free()
+	dock = null
 
 func _disable_plugin() ->void:
 	remove_editor_setting(editor_copy_key)
@@ -98,28 +100,40 @@ func _disable_plugin() ->void:
 	remove_editor_setting(editor_preview_paint_color)
 	remove_editor_setting(editor_preview_erase_color)
 
-func _handles(object :Object) ->bool:
-	brush = get_brush2d(object)
-	return brush != null
-		
-func _forward_canvas_gui_input(event :InputEvent) ->bool:
-	plugin_process()
+# handle brush
 
-	if !button_check():
+func try_create_button() ->void:
+	if not is_instance_valid(button):
+		button = preload("tool_button.tscn").instantiate()
+		var button_node :Button = button.get_node("ToolButton")
+		button_node.toggled.connect(select_update)
+
+func is_brush_enabled() ->bool:
+	return button != null && button.visible && button.get_node("ToolButton").button_pressed
+
+func select_update(_pressed :bool = false) ->void:
+	var select := EditorInterface.get_selection()
+	if brush != null && is_brush_enabled():
+		select.clear()
+		select.add_node(brush)
+
+func _handles(object :Object) ->bool:
+	brush = find_brush(object)
+	return brush != null
+
+func _forward_canvas_gui_input(event :InputEvent) ->bool:
+	canvas_gui_process()
+
+	if !is_brush_enabled():
 		return false
 	if event is InputEventMouseButton:
 		if event.button_index == MOUSE_BUTTON_LEFT || event.button_index == MOUSE_BUTTON_RIGHT:
 			return true
 	return false
 
-func plugin_process() ->void:
-	try_add_button()
+func canvas_gui_process() -> void:
+	try_create_button()
 
-	var path := EditorInterface.get_selected_paths();
-	var res :Resource = null
-	if !path.is_empty() && FileAccess.file_exists(path[0]):
-		res = load(path[0])
-	
 	if brush != null:
 		if !button.visible:
 			add_control_to_container(CONTAINER_CANVAS_EDITOR_MENU, button)
@@ -127,22 +141,28 @@ func plugin_process() ->void:
 			select_update()
 
 		apply_settings(brush)
-		if button_check():
-			brush._brush_process(res)
+		if is_brush_enabled():
+			brush.brush_process()
 		else:
-			brush.clear_working()
+			brush.brush_clear()
 	elif button.visible:
 		remove_control_from_container(CONTAINER_CANVAS_EDITOR_MENU, button)
 		button.visible = false
 
-var sel :Array = []
+func process_dock():
+	var root = EditorInterface.get_edited_scene_root()
+	if root == null || root is not CanvasItem:
+		dock.close()
+		return
+	dock.open()
+	dock_content.process_with_root(root)
 
-func _process(delta: float) -> void:
-	sel = EditorInterface.get_selection().get_selected_nodes()
+func process_brush():
+	var sel = EditorInterface.get_selection().get_selected_nodes()
 	if sel.is_empty():
 		return
 	
-	brush = get_brush2d(sel[0])
+	brush = find_brush(sel[0])
 	if brush != null:
 		if !button.visible:
 			add_control_to_container(CONTAINER_CANVAS_EDITOR_MENU, button)
@@ -150,18 +170,22 @@ func _process(delta: float) -> void:
 			select_update()
 
 		apply_settings(brush)
-		brush._copy_process(sel)
+		brush.process_copy()
 	elif button.visible:
 		remove_control_from_container(CONTAINER_CANVAS_EDITOR_MENU, button)
 		button.visible = false
 
-static func get_brush2d(object :Object) ->Object:
-	if !object.has_method("get_parent"):
+func _process(_delta: float) -> void:
+	process_dock()
+	process_brush()
+
+static func find_brush(node) ->Brush2D:
+	if node is not Node:
 		return null
-	if object is Brush2D:
-		return object
-	var i :Node = object.get_parent()
-	var root :Node = object.get_tree().get_edited_scene_root().get_parent()
+	if node is Brush2D:
+		return node
+	var i :Node = node.get_parent()
+	var root :Node = node.get_tree().get_edited_scene_root().get_parent()
 	while i != root:
 		if i is Brush2D:
 			return i

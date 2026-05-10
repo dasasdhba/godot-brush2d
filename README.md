@@ -1,8 +1,8 @@
 # Introduction
 
-This is a simple addon for **Godot-v4.3.0-stable** that can help you to easily place **PackedScene** in **2D panel**.
+This is a simple addon for **Godot-v4.6.x** that can help you to easily place **PackedScene** in **2D panel**. For older godot supports, you may check other branch.
 
-**Current version: 0.8.1**
+**Current version: 0.9.0**
 
 ## Usage
 
@@ -13,12 +13,14 @@ Here is a simple instruction:
 3. Select a **PackedScene** in the filesystem dock.
 4. Now you can simply use the mouse **left button** to paint or **right button** to erase.
 
+To customize the recognized size of a scene, you may open bottom `Brush2D` dock and change the `Rect` to cover your scene. There is also an `offset` parameter, which allows to shift the final placement.
+
 Other features:
 
 1. Paint/Rectangle/Line tools, you can hold `Shift` to limit the paint shape.
-2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them.
+2. You can select some children of `Brush2D` node, then press `C` or `X` by default to **copy** or **cut** them. Note: `offset` will not work in copy mode.
 3. Some editor settings that manage shortcut and preview behavior.
 
-## Known Issue
+## Known issue
 
-1. Does not work in filesystem dock split mode, will be fixed in 4.3.1, see [this](https://github.com/godotengine/godot/pull/94703) for details. Alternately, you can still use the copy feature to use this plugin.
+Since Godot does not expose `duplicate_from_editor`, copy mode may not work as expected, e.g., it may wrongly copy internal nodes, or lose some properties & signal connections.

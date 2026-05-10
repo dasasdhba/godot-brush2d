@@ -1,6 +1,6 @@
-[gd_scene load_steps=14 format=3 uid="uid://odlwpobfx1a2"]
+[gd_scene format=3 uid="uid://odlwpobfx1a2"]
 
-[ext_resource type="Script" path="res://addons/brush2d/tool_button.gd" id="1_auovr"]
+[ext_resource type="Script" uid="uid://bfclrggfrtt2w" path="res://addons/brush2d/tool_button.gd" id="1_auovr"]
 [ext_resource type="Texture2D" uid="uid://cg22ro8lj20jd" path="res://addons/brush2d/icon.png" id="1_suv8y"]
 [ext_resource type="Texture2D" uid="uid://dx5mgua6hj0pg" path="res://addons/brush2d/Paint.svg" id="2_0wrp8"]
 [ext_resource type="Texture2D" uid="uid://brppplvsdij5y" path="res://addons/brush2d/Rectangle.svg" id="3_fxgpm"]
@@ -22,14 +22,13 @@ keycode = 66
 [sub_resource type="Shortcut" id="Shortcut_tsja3"]
 events = [SubResource("InputEventKey_i62y8")]
 
-[sub_resource type="InputEventKey" id="InputEventKey_q7xja"]
+[sub_resource type="InputEventKey" id="InputEventKey_fe0px"]
 device = -1
-pressed = true
-keycode = 77
-unicode = 109
+keycode = 75
+unicode = 107
 
 [sub_resource type="Shortcut" id="Shortcut_uiq8y"]
-events = [SubResource("InputEventKey_q7xja")]
+events = [SubResource("InputEventKey_fe0px")]
 
 [sub_resource type="InputEventKey" id="InputEventKey_7msg6"]
 device = -1
@@ -40,13 +39,13 @@ unicode = 108
 [sub_resource type="Shortcut" id="Shortcut_opl8w"]
 events = [SubResource("InputEventKey_7msg6")]
 
-[node name="Brush2DToolButton" type="HBoxContainer"]
+[node name="Brush2DToolButton" type="HBoxContainer" unique_id=727955073]
 visible = false
 size_flags_horizontal = 3
 size_flags_vertical = 3
 script = ExtResource("1_auovr")
 
-[node name="ToolButton" type="Button" parent="."]
+[node name="ToolButton" type="Button" parent="." unique_id=1715257247]
 layout_mode = 2
 toggle_mode = true
 keep_pressed_outside = true
@@ -54,7 +53,7 @@ shortcut = SubResource("2")
 text = "Enable"
 icon = ExtResource("1_suv8y")
 
-[node name="Paint" type="Button" parent="."]
+[node name="Paint" type="Button" parent="." unique_id=894735291]
 visible = false
 layout_mode = 2
 toggle_mode = true
@@ -63,7 +62,7 @@ keep_pressed_outside = true
 shortcut = SubResource("Shortcut_tsja3")
 icon = ExtResource("2_0wrp8")
 
-[node name="Rectangle" type="Button" parent="."]
+[node name="Rectangle" type="Button" parent="." unique_id=629517745]
 visible = false
 layout_mode = 2
 toggle_mode = true
@@ -71,7 +70,7 @@ keep_pressed_outside = true
 shortcut = SubResource("Shortcut_uiq8y")
 icon = ExtResource("3_fxgpm")
 
-[node name="Line" type="Button" parent="."]
+[node name="Line" type="Button" parent="." unique_id=1271797734]
 visible = false
 layout_mode = 2
 toggle_mode = true
