@@ -31,10 +31,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true
 
 [node name="Control" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer" unique_id=2049017757]
 custom_minimum_size = Vector2(24, 0)
@@ -51,10 +52,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="PanelContainer/VBoxContainer" unique_id=609850102]
 layout_mode = 2
@@ -70,11 +72,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
-value = 32.0
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true
 
 [node name="Control" type="Control" parent="PanelContainer/VBoxContainer/HBoxContainer2" unique_id=479071256]
 custom_minimum_size = Vector2(24, 0)
@@ -91,11 +93,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
-value = 32.0
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true
 
 [node name="Label2" type="Label" parent="." unique_id=1312210368]
 layout_mode = 2
@@ -118,10 +120,11 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true
 
 [node name="Control" type="Control" parent="PanelContainer2/HBoxContainer" unique_id=1100403255]
 custom_minimum_size = Vector2(24, 0)
@@ -138,7 +141,8 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
 step = 0.1
+value = 128.0
 allow_greater = true
 allow_lesser = true
-update_on_text_changed = true
 suffix = "px"
+select_all_on_focus = true

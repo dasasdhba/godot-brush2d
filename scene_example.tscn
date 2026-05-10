@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dag0ixn2peky4"]
+
+[ext_resource type="Texture2D" uid="uid://i7hbk0ji1fir" path="res://icon.svg" id="1_uxs8n"]
+
+[node name="SceneExample" type="Node2D" unique_id=1927770897]
+metadata/_brush2d_rect = Rect2(-64, -64, 128, 128)
+metadata/_brush2d_offset = Vector2(0, 0)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=394016785]
+texture = ExtResource("1_uxs8n")

@@ -1,0 +1,20 @@
+[gd_scene format=3 uid="uid://d3wepis3ofx8x"]
+
+[ext_resource type="Script" uid="uid://cnaholbf8012o" path="res://addons/brush2d/brush2d.gd" id="1_novax"]
+[ext_resource type="PackedScene" uid="uid://dag0ixn2peky4" path="res://scene_example.tscn" id="2_kjlww"]
+
+[node name="BrushExample" type="Node2D" unique_id=194577409]
+
+[node name="Brush2D" type="Node2D" parent="." unique_id=1500982035]
+script = ExtResource("1_novax")
+metadata/_custom_type_script = "uid://cnaholbf8012o"
+
+[node name="SceneExample" type="Node2D" parent="Brush2D" unique_id=1927770897 instance=ExtResource("2_kjlww")]
+position = Vector2(64, 64)
+metadata/_brush2d_rect = Rect2(-64, -64, 128, 128)
+metadata/_brush2d_offset = Vector2(0, 0)
+
+[node name="SceneExample2" type="Node2D" parent="Brush2D" unique_id=391756784 instance=ExtResource("2_kjlww")]
+position = Vector2(192, 64)
+metadata/_brush2d_rect = Rect2(-64, -64, 128, 128)
+metadata/_brush2d_offset = Vector2(0, 0)

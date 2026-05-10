@@ -421,7 +421,7 @@ func set_scene_place_pos(node :CanvasItem, pos :Vector2) -> void:
 	node.position = pos - get_scene_rect(node).position + get_scene_offset(node)
 
 func set_list_node_place_pos(node :CanvasItem, first_pos : Vector2, topleft : Vector2, pos :Vector2) -> void:
-	node.position += pos - first_pos - topleft
+	node.position += pos - first_pos - topleft + get_scene_offset(node)
 
 func set_copy_list_place_pos(list :CopyList, pos :Vector2) -> void:
 	var first_pos := list.first_pos
@@ -570,7 +570,8 @@ class Brush2DPreviewNode:
 		if last_sel_data is CopyList:
 			for i in last_copy_list.size():
 				last_copy_list[i].position = last_sel_data.nodes[i].position \
-					+ pos - last_sel_data.first_pos - last_sel_data.rect.position
+					+ pos - last_sel_data.first_pos - last_sel_data.rect.position \
+					+ brush.get_scene_offset(last_sel_data.nodes[i])
 		else:
 			for c in get_children():
 				if c is not CanvasItem:

@@ -23,7 +23,7 @@ func get_param_offset():
 
 func get_final_rect():
 	var rect = get_param_rect()
-	rect.position += get_param_offset()
+	rect.position -= get_param_offset()
 	return rect
 
 class BrushParamPreview:
