@@ -3,7 +3,6 @@
 extends Node2D
 class_name Brush2D
 
-@export_category("Brush2D")
 @export var grid: Vector2 = Vector2(32,32)
 @export var default_rect :Rect2 = Rect2(-16,-16,32,32)
 @export var default_offset : Vector2 = Vector2.ZERO
