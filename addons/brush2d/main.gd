@@ -18,6 +18,7 @@ var _brush :Brush2D = null
 const setting_key = "brush_2d";
 const editor_copy_key = setting_key + "/control/copy_key"
 const editor_cut_key = setting_key + "/control/cut_key"
+const editor_restrict_key = setting_key + "/control/restrict_key"
 
 const editor_preview_enable = setting_key + "/preview/enable"
 const editor_preview_alpha = setting_key + "/preview/alpha"
@@ -29,27 +30,41 @@ const editor_preview_erase_color = setting_key + "/preview/erase_color"
 
 static func add_editor_setting(key :String, hint :int, default) ->void:
 	var setting := EditorInterface.get_editor_settings()
-	if setting.has_setting(key):
-		return
-	setting.set_setting(key, default)
 	setting.set_initial_value(key, default, false)
 	setting.add_property_info({
 		"name" : key,
 		"type" : typeof(default),
 		"hint" : hint
 	})
+	if setting.has_setting(key):
+		return
+	setting.set_setting(key, default)
 
 static func remove_editor_setting(key :String) ->void:
 	var setting := EditorInterface.get_editor_settings()
 	if setting.has_setting(key):
 		setting.erase(key)
 
+static func create_key(key):
+	var ev = InputEventKey.new()
+	ev.keycode = key
+	return ev
+
+static func get_key(ev, def):
+	if ev is InputEventKey:
+		var key = ev.keycode
+		if key == KEY_NONE:
+			return def
+		return key
+	return def
+
 func apply_settings(p_brush :Brush2D) ->void:
 	var setting := EditorInterface.get_editor_settings()
 	p_brush.undo = get_undo_redo()
 	p_brush.place_mode = button.get_mode()
-	p_brush.copy_key = setting.get_setting(editor_copy_key)
-	p_brush.cut_key = setting.get_setting(editor_cut_key)
+	p_brush.copy_key = get_key(setting.get_setting(editor_copy_key), KEY_C)
+	p_brush.cut_key = get_key(setting.get_setting(editor_cut_key), KEY_X)
+	p_brush.restrict_key = get_key(setting.get_setting(editor_restrict_key), KEY_SHIFT)
 	p_brush.preview = setting.get_setting(editor_preview_enable)
 	p_brush.preview_alpha = setting.get_setting(editor_preview_alpha)
 	p_brush.preview_border = setting.get_setting(editor_preview_border)
@@ -63,8 +78,9 @@ var dock_content
 
 func _enter_tree() ->void:
 	try_create_button()
-	add_editor_setting(editor_copy_key, PROPERTY_HINT_NONE, KEY_C)
-	add_editor_setting(editor_cut_key, PROPERTY_HINT_NONE, KEY_X)
+	add_editor_setting(editor_copy_key, PROPERTY_HINT_NONE, create_key(KEY_C))
+	add_editor_setting(editor_cut_key, PROPERTY_HINT_NONE, create_key(KEY_X))
+	add_editor_setting(editor_restrict_key, PROPERTY_HINT_NONE, create_key(KEY_SHIFT))
 	add_editor_setting(editor_preview_enable, PROPERTY_HINT_NONE, true)
 	add_editor_setting(editor_preview_alpha, PROPERTY_HINT_NONE, 0.5)
 	add_editor_setting(editor_preview_border, PROPERTY_HINT_NONE, true)
@@ -93,6 +109,7 @@ func _exit_tree() ->void:
 func _disable_plugin() ->void:
 	remove_editor_setting(editor_copy_key)
 	remove_editor_setting(editor_cut_key)
+	remove_editor_setting(editor_restrict_key)
 	remove_editor_setting(editor_preview_alpha)
 	remove_editor_setting(editor_preview_border)
 	remove_editor_setting(editor_preview_border_width)

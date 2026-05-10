@@ -35,7 +35,7 @@ class BrushParamPreview:
 		z_index = RenderingServer.CANVAS_ITEM_Z_MAX
 
 	func _draw():
-		if !dock.is_visible_in_tree():
+		if !is_instance_valid(dock) || !dock.is_visible_in_tree():
 			return
 
 		var r :Rect2 = dock.get_final_rect()

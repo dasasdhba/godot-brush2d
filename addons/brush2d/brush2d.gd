@@ -264,13 +264,15 @@ func build_continous_grid_pos(size :Vector2, origin: Vector2) ->Array[Vector2]:
 		result.append(Vector2(v.x, v.y) * size + origin)
 	return result
 
+var restrict_key := KEY_SHIFT
+
 func get_line_pos(size :Vector2, p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
 	size.x = ceil(size.x/grid.x)*grid.x
 	size.y = ceil(size.y/grid.y)*grid.y
 
 	var d := p2 - p1
 	var r := Vector2i(floor(d.x/size.x), floor(d.y/size.y))
-	if Input.is_key_pressed(KEY_SHIFT):
+	if Input.is_key_pressed(restrict_key):
 		var s :Vector2 = r
 		var a = round(s.angle() / (PI / 4.0)) * (PI / 4.0)
 		var f := Vector2.RIGHT.rotated(a)
@@ -284,7 +286,7 @@ func get_line_pos(size :Vector2, p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
 	return result
 
 func get_rect_pos(size :Vector2, p1 :Vector2, p2 :Vector2) ->Array[Vector2]:
-	if Input.is_key_pressed(KEY_SHIFT):
+	if Input.is_key_pressed(restrict_key):
 		var dx = p2.x - p1.x
 		var dy = p2.y - p1.y
 		var m = min(abs(dx), abs(dy))
@@ -433,18 +435,6 @@ func set_copy_list_place_pos(list :CopyList, pos :Vector2) -> void:
 var place_mode :int
 var place_array : Array[Vector2] = []
 var place_origin = null
-
-func placement_cut_overlap(size : Vector2, exists : Array[Vector2], new : Array[Vector2]) -> Array[Vector2]:
-	var result :Array[Vector2] = []
-	for n in new:
-		var except := false
-		for l in exists:
-			if l == n || Rect2(l, size).intersects(Rect2(n, size)):
-				except = true
-				break
-		if not except:
-			result.append(n)
-	return result
 
 func process_placement(size : Vector2) -> void:
 	if place_origin == null:
