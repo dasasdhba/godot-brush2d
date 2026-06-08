@@ -482,7 +482,7 @@ func submit_placement(size : Vector2) -> void:
 			else:
 				var res := get_sel_packed()
 				if res != null:
-					var node = res.instantiate()
+					var node = res.instantiate(PackedScene.GEN_EDIT_STATE_INSTANCE)
 					set_scene_place_pos(node, r)
 					add.append(node)
 		brush_commit_add(add)
@@ -550,6 +550,9 @@ class Brush2DPreviewNode:
 	func _process(_delta) -> void:
 		if !brush.is_active || brush.is_erase || !brush.preview:
 			hide()
+			if last_sel_data != null:
+				last_sel_data = null
+				clear_children()
 			return
 
 		modulate = Color(1, 1, 1, brush.preview_alpha)
