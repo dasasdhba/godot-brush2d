@@ -369,13 +369,19 @@ func clear_sel_scene() -> void:
 	last_sel_scene = null
 	last_sel_path = ""
 
-func get_sel_scene() -> CanvasItem:
+func get_sel_path() -> String:
 	var path := EditorInterface.get_selected_paths();
-	if path.is_empty():
+	for p in path:
+		if p.ends_with(".tscn") or p.ends_with(".scn") or p.ends_with(".res"):
+			return p
+	return ""
+
+func get_sel_scene() -> CanvasItem:
+	var pstr := get_sel_path()
+	if pstr == "":
 		clear_sel_scene()
 		return null
 
-	var pstr = path[0]
 	if pstr == last_sel_path:
 		return last_sel_scene
 
